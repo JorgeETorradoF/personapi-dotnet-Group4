@@ -1,0 +1,37 @@
+services:
+  sqlserver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sqlserver_arq
+    environment:
+      SA_PASSWORD: "Laboratorio1*"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1434:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+      - ./init:/init
+    command: >
+      bash -c "
+        if [ ! -f /var/opt/mssql/.init-done ]; then
+          echo 'Launching SQL Server in background...';
+          /opt/mssql/bin/sqlservr &
+
+          echo 'Waiting for SQL Server to be ready...';
+          until /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Laboratorio1*' -Q 'SELECT 1' > /dev/null 2>&1; do
+            sleep 1;
+          done
+
+          echo 'Running init.sql...';
+          /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'Laboratorio1*' -i /init/init.sql
+
+          touch /var/opt/mssql/.init-done
+          wait
+        else
+          echo 'SQL already initialized. Starting normally...';
+          exec /opt/mssql/bin/sqlservr
+        fi
+      "
+volumes:
+  mssql_data:
