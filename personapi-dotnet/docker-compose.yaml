@@ -2,7 +2,7 @@ services:
   sqlserver:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.sql
     container_name: sqlserver_arq
     environment:
       SA_PASSWORD: "Laboratorio1*"
@@ -33,5 +33,19 @@ services:
           exec /opt/mssql/bin/sqlservr
         fi
       "
+
+  personapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: personapi_app
+    ports:
+      - "5180:80"
+    depends_on:
+      - sqlserver
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=persona_db;User=sa;Password=Laboratorio1*
+
 volumes:
   mssql_data:
