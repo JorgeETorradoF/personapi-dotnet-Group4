@@ -53,11 +53,9 @@ En Windows, asegúrate de tener instalado **Docker Desktop**. Luego, abre una te
 docker-compose up --build
 ```
 
-Esto levantará el contenedor de **SQL Server** con la base de datos `persona_db`.
+Esto levantará el contenedor de **SQL Server** con la base de datos `persona_db` y la aplicación web MVC hecha en .NET.
 
-1. Abre la solución `personapi-dotnet` en **Visual Studio 2022**.
-2. Ejecuta el proyecto presionando `F5` o haciendo clic en **Iniciar depuración**.
-3. Accede a la aplicación desde tu navegador en:
+1. Accede a la aplicación desde tu navegador en:
 
 ```text
 http://localhost:5180
